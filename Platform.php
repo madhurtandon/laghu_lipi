@@ -264,7 +264,7 @@ class Platform
 
 		if ($method == self::METHOD_POST && empty($data)) {
 			var_dump('If you are using POST then why the hell are you sending empty data :(');
-			 exit();
+			exit();
 		}
 
 		$curlResource = curl_init();
@@ -568,7 +568,7 @@ class Platform
 					break;
 
 				case 'config':
-					return $this->httpPost("instances/$instanceId/config");
+					return $this->httpPost("instances/$instanceId/config", $options);
 					break;
 
 				case 'reindex':
@@ -1018,7 +1018,7 @@ class Platform
 	public function PodActions(
 		$action = 'RetrieveAllPods', $pod_id = '', $pod_name = '', $pod_type = '', $pod_environment = '', $region_id = '', $enable_ondemand_routing = '',
 		$enable_trial_routing = '',
-		$seat_cap = '', $customer_cap = '', $version = '', $country_code = '', $cdn_url = '', $state = ''
+		$seat_cap = '', $customer_cap = '', $version = '', $country_code = '', $cdn_url = '', $state = '', $option = ''
 	)
 	{
 		switch ($action) {
@@ -1073,7 +1073,7 @@ class Platform
 				break;
 
 			case 'ResetConfigOfAllInstancesOnThisPod':
-				return $this->httpPost("pods/$pod_id/config");
+				return $this->httpPost("pods/$pod_id/config", ['option' => $option]);
 				break;
 
 			case 'UpdatePodState':
@@ -1442,6 +1442,8 @@ switch ($options["m"]) {
 		} else if (isset($options['app_domain']) && isset($options['is_migration']) && isset($options['country_code'])) {
 			echo $Platform->InstanceActions($options['instanceid'], $options['action'], ['app_domain'   => $options['app_domain'], 'is_migration' => $options['is_migration'],
 																						 'country_code' => $options['country_code']]);
+		} else if (isset($options['option'])) {
+			echo $Platform->InstanceActions($options['instanceid'], $options['action'], ['option' => $options['option']]);
 		} else {
 			echo $Platform->InstanceActions($options['instanceid'], $options['action'], ['elastic_search_cluster_id' => isset($options['elastic_search_cluster_id']) ? $options['elastic_search_cluster_id'] : '',
 																						 'redis_shard_id'            => isset($options['redis_shard_id']) ? $options['redis_shard_id'] : '',
@@ -1646,7 +1648,7 @@ switch ($options["m"]) {
 				} else {
 					die('Bhai pod_id aur state to daal do.. https://kayako.atlassian.net/wiki/display/MICROSERVICES/Pods#Pods-Updatepodstate');
 				}
-			break;
+				break;
 
 			default:
 				die('Action pass karna bhool gye???');

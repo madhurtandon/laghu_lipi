@@ -173,7 +173,8 @@ do {
 					break;
 
 				case 'l':
-					$Platform->InstanceActions($instance_id, 'config');
+					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires)');
+					$Platform->InstanceActions($instance_id, 'config', ['option' => $option]);
 					break;
 
 				case 'm':
@@ -701,7 +702,8 @@ do {
 
 				case 'k':
 					$pod_id = $Platform->GetInput('enter pod_id');
-					$Platform->PodActions('ResetConfigOfAllInstancesOnThisPod', $pod_id);
+					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires)');
+					$Platform->PodActions('ResetConfigOfAllInstancesOnThisPod', $pod_id, 'name', 'type', 'env','region', 'on','trial','seat','cus','ver','cc', 'cdn', 'state', $option);
 					break;
 
 				case 'l':
