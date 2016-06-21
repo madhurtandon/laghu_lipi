@@ -311,12 +311,28 @@ do {
 					break;
 
 				case 'c':
-					$Platform->InstanceAliasActions($instance_id, 'create', 1, ['app_domain' => 'alias' . $Platform->GenerateRandomString(5)]);
+					$Platform->InstanceAliasActions($instance_id, 'create', 1, ['app_domain' => 'alias' . strtolower($Platform->GenerateRandomString(5))]);
 					break;
 
 				case 'd':
-					$alias_id = $Platform->GetInput('enter alias id');
-					$Platform->InstanceAliasActions($instance_id, 'update', $alias_id, ['app_domain' => 'new_alias' . $Platform->GenerateRandomString(4)]);
+					$alias_id    = $Platform->GetInput('enter alias id');
+					$cname       = $Platform->GetInput('enter CNAME for instance, else press enter');
+					$certificate = '';
+					$privateKey  = '';
+
+					if (isset($cname)) {
+						$certificate = $Platform->GetInput('enter certificate for instance cname');
+						$privateKey  = $Platform->GetInput('enter private_key for instance cname');
+					}
+
+					if (isset($cname)) {
+						$Platform->InstanceAliasActions($instance_id, 'update', $alias_id, ['app_domain'  => 'new_alias' . strtolower($Platform->GenerateRandomString(4)), 'cname' => $cname,
+																							'certificate' => $certificate,
+																							'private_key' => $privateKey]);
+					} else {
+						$Platform->InstanceAliasActions($instance_id, 'update', $alias_id, ['app_domain' => 'new_alias' . strtolower($Platform->GenerateRandomString(4))]);
+					}
+
 					break;
 
 				case 'e':
@@ -702,14 +718,14 @@ do {
 
 				case 'k':
 					$pod_id = $Platform->GetInput('enter pod_id');
-					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires)');
-					$Platform->PodActions('ResetConfigOfAllInstancesOnThisPod', $pod_id, 'name', 'type', 'env','region', 'on','trial','seat','cus','ver','cc', 'cdn', 'state', $option);
+					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), SEARCH (re-index Elastic Search)');
+					$Platform->PodActions('ResetConfigOfAllInstancesOnThisPod', $pod_id, 'name', 'type', 'env', 'region', 'on', 'trial', 'seat', 'cus', 'ver', 'cc', 'cdn', 'state', $option);
 					break;
 
 				case 'l':
 					$pod_id = $Platform->GetInput('enter pod_id');
-					$state = $Platform->GetInput('enter state');
-					$Platform->PodActions('UpdatePodState', $pod_id, 'name', 'type', 'env','region', 'on','trial','seat','cus','ver','cc', 'cdn', $state);
+					$state  = $Platform->GetInput('enter state');
+					$Platform->PodActions('UpdatePodState', $pod_id, 'name', 'type', 'env', 'region', 'on', 'trial', 'seat', 'cus', 'ver', 'cc', 'cdn', $state);
 					break;
 
 				default:
@@ -726,8 +742,7 @@ do {
 				continue;
 			}
 
-			switch ($shard_actions)
-			{
+			switch ($shard_actions) {
 				case 'a':
 					$Platform->ShardActions();
 					break;
