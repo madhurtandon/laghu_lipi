@@ -173,8 +173,14 @@ do {
 					break;
 
 				case 'l':
-					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires)');
-					$Platform->InstanceActions($instance_id, 'config', ['option' => $option]);
+					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), DNS (Sync DNS entires)');
+					$protected_cname = '';
+
+					if (strtolower($option) == 'dns') {
+						$protected_cname = $Platform->GetInput('enter protected_cname which is provided by DOSARREST, if left empty then it will sync the dns records with the default entries present in Platform\'s DB');
+					}
+
+					$Platform->InstanceActions($instance_id, 'config', ['option' => $option, 'protected_cname' => $protected_cname]);
 					break;
 
 				case 'm':
@@ -718,8 +724,13 @@ do {
 
 				case 'k':
 					$pod_id = $Platform->GetInput('enter pod_id');
-					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), SEARCH (re-index Elastic Search)');
-					$Platform->PodActions('ResetConfigOfAllInstancesOnThisPod', $pod_id, 'name', 'type', 'env', 'region', 'on', 'trial', 'seat', 'cus', 'ver', 'cc', 'cdn', 'state', $option);
+					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), SEARCH (re-index Elastic Search), LB_RECORDS (Sync lb A record)');
+					$lb_records = '';
+					if (strtolower($option) == 'lb_records' || strtolower($option) == 'all') {
+						$lb_records = $Platform->GetInput('enter lb\'s A records in single list JSON for example: ["127.0.0.1", "127.0.0.2"], if left blank then the A records will be synced with the entries present in database for this POD');
+					}
+
+					$Platform->PodActions('ResetConfigOfAllInstancesOnThisPod', $pod_id, 'name', 'type', 'env', 'region', 'on', 'trial', 'seat', 'cus', 'ver', 'cc', 'cdn', 'state', $option, $lb_records);
 					break;
 
 				case 'l':

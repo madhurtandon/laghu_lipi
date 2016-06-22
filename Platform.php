@@ -1012,13 +1012,15 @@ class Platform
 	 * @param string $country_code
 	 * @param string $cdn_url
 	 * @param string $state
+	 * @param string $option
+	 * @param string $lb_records
 	 *
 	 * @return mixed
 	 */
 	public function PodActions(
 		$action = 'RetrieveAllPods', $pod_id = '', $pod_name = '', $pod_type = '', $pod_environment = '', $region_id = '', $enable_ondemand_routing = '',
 		$enable_trial_routing = '',
-		$seat_cap = '', $customer_cap = '', $version = '', $country_code = '', $cdn_url = '', $state = '', $option = ''
+		$seat_cap = '', $customer_cap = '', $version = '', $country_code = '', $cdn_url = '', $state = '', $option = '', $lb_records = ''
 	)
 	{
 		switch ($action) {
@@ -1073,7 +1075,7 @@ class Platform
 				break;
 
 			case 'ResetConfigOfAllInstancesOnThisPod':
-				return $this->httpPost("pods/$pod_id/config", ['option' => $option]);
+				return $this->httpPost("pods/$pod_id/config", ['option' => $option, 'ip_address_list' => $lb_records]);
 				break;
 
 			case 'UpdatePodState':
@@ -1644,7 +1646,7 @@ switch ($options["m"]) {
 
 			case 'UpdatePodState':
 				if (isset($options['pod_id']) && isset($options['state'])) {
-					echo $Platform->PodActions('UpdatePodState', $options['pod_id'], 'name', 'type', 'env','region', 'on','trial','seat','cus','ver','cc', 'cdn', $options['state']);
+					echo $Platform->PodActions('UpdatePodState', $options['pod_id'], 'name', 'type', 'env', 'region', 'on', 'trial', 'seat', 'cus', 'ver', 'cc', 'cdn', $options['state']);
 				} else {
 					die('Bhai pod_id aur state to daal do.. https://kayako.atlassian.net/wiki/display/MICROSERVICES/Pods#Pods-Updatepodstate');
 				}
