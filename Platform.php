@@ -1426,7 +1426,7 @@ $longopts = [
 	"customer_cap::", "version::", "shard_id::", "shard_name::", "root_username::", "server_id::", "server_name::", "server_type::", "location_id::", "provider_id::", "hostname::",
 	"public_ip::", "private_ip::", "parent_id::", "server_role::", "server_service::", "server_is_enabled::", "server_token::", "location_name::", "upgrade::", "industry::", "email::",
 	"parent_instance_id::", "plan_name::", "package_link::", "build_id::", "is_migration::", "service_type::", "service_id::", "port::", "service_name::", "redirect_to_alias_id::", "redis_shard_id::",
-	"elastic_search_cluster_id::", "state::"
+	"elastic_search_cluster_id::", "state::", "sync_option::", 'lb_records::'
 ];
 
 
@@ -1649,6 +1649,19 @@ switch ($options["m"]) {
 					echo $Platform->PodActions('UpdatePodState', $options['pod_id'], 'name', 'type', 'env', 'region', 'on', 'trial', 'seat', 'cus', 'ver', 'cc', 'cdn', $options['state']);
 				} else {
 					die('Bhai pod_id aur state to daal do.. https://kayako.atlassian.net/wiki/display/MICROSERVICES/Pods#Pods-Updatepodstate');
+				}
+				break;
+
+			case 'ResetConfigOfAllInstancesOnThisPod':
+				var_dump($options);
+				if (isset($options['pod_id']) && isset($options['sync_option'])) {
+					if (strtolower($options['sync_option']) == 'all') {
+						die('Syncing all configs is dangerous!');
+					}
+
+					echo $Platform->PodActions('ResetConfigOfAllInstancesOnThisPod', $options['pod_id'], 'name', 'type', 'env', 'region', 'on', 'trial', 'seat', 'cus', 'ver', 'cc', 'cdn', 'state', $options['sync_option'], isset($options['lb_records']) ? $options['lb_records'] : '');
+				} else {
+					die('Bhai pod_id aur option to daal do.. https://kayako.atlassian.net/wiki/display/MICROSERVICES/Pods#Pods-Resetconfigofallinstancesonthispod');
 				}
 				break;
 
