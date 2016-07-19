@@ -1426,7 +1426,7 @@ $longopts = [
 	"customer_cap::", "version::", "shard_id::", "shard_name::", "root_username::", "server_id::", "server_name::", "server_type::", "location_id::", "provider_id::", "hostname::",
 	"public_ip::", "private_ip::", "parent_id::", "server_role::", "server_service::", "server_is_enabled::", "server_token::", "location_name::", "upgrade::", "industry::", "email::",
 	"parent_instance_id::", "plan_name::", "package_link::", "build_id::", "is_migration::", "service_type::", "service_id::", "port::", "service_name::", "redirect_to_alias_id::", "redis_shard_id::",
-	"elastic_search_cluster_id::", "state::", "sync_option::", 'lb_records::'
+	"elastic_search_cluster_id::", "state::", "sync_option::", 'lb_records::', 'protected_cname::'
 ];
 
 
@@ -1434,6 +1434,7 @@ $options = getopt($shortopts, $longopts);
 //echo "\nParamerter passed\n";
 //print_r($options);
 //echo "\n";
+
 
 switch ($options["m"]) {
 	case 'InstanceActions':
@@ -1446,6 +1447,12 @@ switch ($options["m"]) {
 																						 'country_code' => $options['country_code']]);
 		} else if (isset($options['option'])) {
 			echo $Platform->InstanceActions($options['instanceid'], $options['action'], ['option' => $options['option']]);
+		} else if (isset($options['sync_option'])) {
+			if (strtolower($options['sync_option']) == 'all') {
+				die('Syncing all configs is dangerous!');
+			}
+
+			echo $Platform->InstanceActions($options['instanceid'], 'config', ['option' => $options['sync_option'], 'protected_cname' => isset($options['protected_cname']) ? $options['protected_cname'] : '']);
 		} else {
 			echo $Platform->InstanceActions($options['instanceid'], $options['action'], ['elastic_search_cluster_id' => isset($options['elastic_search_cluster_id']) ? $options['elastic_search_cluster_id'] : '',
 																						 'redis_shard_id'            => isset($options['redis_shard_id']) ? $options['redis_shard_id'] : '',
@@ -1653,7 +1660,6 @@ switch ($options["m"]) {
 				break;
 
 			case 'ResetConfigOfAllInstancesOnThisPod':
-				var_dump($options);
 				if (isset($options['pod_id']) && isset($options['sync_option'])) {
 					if (strtolower($options['sync_option']) == 'all') {
 						die('Syncing all configs is dangerous!');
