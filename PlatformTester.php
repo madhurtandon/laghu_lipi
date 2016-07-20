@@ -173,7 +173,7 @@ do {
 					break;
 
 				case 'l':
-					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), DNS (Sync DNS entires)');
+					$option          = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), DNS (Sync DNS entires)');
 					$protected_cname = '';
 
 					if (strtolower($option) == 'dns') {
@@ -723,8 +723,8 @@ do {
 					break;
 
 				case 'k':
-					$pod_id = $Platform->GetInput('enter pod_id');
-					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), SEARCH (re-index Elastic Search), LB_RECORDS (Sync lb A record)');
+					$pod_id     = $Platform->GetInput('enter pod_id');
+					$option     = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), SEARCH (re-index Elastic Search), LB_RECORDS (Sync lb A record), PURGE_BUFFERS (Purge all buffered instances in this POD)');
 					$lb_records = '';
 					if (strtolower($option) == 'lb_records' || strtolower($option) == 'all') {
 						$lb_records = $Platform->GetInput('enter lb\'s A records in single list JSON for example: ["127.0.0.1", "127.0.0.2"], if left blank then the A records will be synced with the entries present in database for this POD');
