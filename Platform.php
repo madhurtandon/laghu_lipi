@@ -550,7 +550,7 @@ class Platform
 
 				case 'clone':
 					return $this->httpPost("instances/$instanceId/copy", ['app_domain'   => $options['app_domain'], 'is_migration' => $options['is_migration'],
-																		  'country_code' => $options['country_code']]);
+																		  'country_code' => $options['country_code'], 'outbound_email' => $options['outbound_email']]);
 					break;
 
 				case 'update':
@@ -696,6 +696,10 @@ class Platform
 
 		if (isset($params['policy'])) {
 			$parameters = array_merge($parameters, ['policy' => $params['policy']]);
+		}
+
+		if (isset($params['outbound_email'])) {
+			$parameters = array_merge($parameters, ['outbound_email' => $params['outbound_email']]);
 		}
 
 		if (!empty($parameters)) {
@@ -1426,7 +1430,7 @@ $longopts = [
 	"customer_cap::", "version::", "shard_id::", "shard_name::", "root_username::", "server_id::", "server_name::", "server_type::", "location_id::", "provider_id::", "hostname::",
 	"public_ip::", "private_ip::", "parent_id::", "server_role::", "server_service::", "server_is_enabled::", "server_token::", "location_name::", "upgrade::", "industry::", "email::",
 	"parent_instance_id::", "plan_name::", "package_link::", "build_id::", "is_migration::", "service_type::", "service_id::", "port::", "service_name::", "redirect_to_alias_id::", "redis_shard_id::",
-	"elastic_search_cluster_id::", "state::", "sync_option::", 'lb_records::', 'protected_cname::'
+	"elastic_search_cluster_id::", "state::", "sync_option::", 'lb_records::', 'protected_cname::', "outbound_email::"
 ];
 
 

@@ -130,7 +130,7 @@ do {
 				case 'c':
 					$is_migration = $Platform->GetInput('mark this as migration: TRUE or FALSE');
 					$Platform->InstanceActions($instance_id, 'clone', ['app_domain'   => $Platform->GenerateRandomString(5), 'is_migration' => $is_migration,
-																	   'country_code' => 'US']);
+																	   'country_code' => 'US', 'outbound_email' => $outbound_email]);
 					break;
 
 				case 'd':
