@@ -1024,7 +1024,7 @@ class Platform
 	public function PodActions(
 		$action = 'RetrieveAllPods', $pod_id = '', $pod_name = '', $pod_type = '', $pod_environment = '', $region_id = '', $enable_ondemand_routing = '',
 		$enable_trial_routing = '',
-		$seat_cap = '', $customer_cap = '', $version = '', $country_code = '', $cdn_url = '', $state = '', $option = '', $lb_records = ''
+		$seat_cap = '', $customer_cap = '', $version = '', $country_code = '', $cdn_url = '', $state = '', $option = '', $lb_records = '', $s3_bucket = ''
 	)
 	{
 		switch ($action) {
@@ -1051,7 +1051,7 @@ class Platform
 			case 'AddPod':
 				$add_pod_array = ['name'                    => $pod_name, 'type' => $pod_type, 'environment' => $pod_environment, 'region_id' => $region_id,
 								  'enable_ondemand_routing' => $enable_ondemand_routing, 'enable_trial_routing' => $enable_trial_routing,
-								  'seat_cap'                => $seat_cap, 'customer_cap' => $customer_cap, 'cdn_url' => $cdn_url];
+								  'seat_cap'                => $seat_cap, 'customer_cap' => $customer_cap, 'cdn_url' => $cdn_url, 's3_bucket' => $s3_bucket];
 
 				foreach ($add_pod_array as $add_pod_key => $add_pod_value) {
 					if (empty($add_pod_value)) {
@@ -1063,8 +1063,18 @@ class Platform
 				break;
 
 			case 'UpdatePod':
-				return $this->httpPut('pods/' . $pod_id, ['enable_ondemand_routing' => $enable_ondemand_routing,
-														  'enable_trial_routing'    => $enable_trial_routing]);
+				$data = ['enable_ondemand_routing' => $enable_ondemand_routing,
+						 'enable_trial_routing'    => $enable_trial_routing,
+						 'cdn_url'                 => $cdn_url,
+						 's3_bucket'               => $s3_bucket];
+
+				foreach ($data as $add_pod_key => $add_pod_value) {
+					if (empty($add_pod_value)) {
+						unset($data[$add_pod_key]);
+					}
+				}
+
+				return $this->httpPut('pods/' . $pod_id, $data);
 
 				break;
 
@@ -1430,7 +1440,7 @@ $longopts = [
 	"customer_cap::", "version::", "shard_id::", "shard_name::", "root_username::", "server_id::", "server_name::", "server_type::", "location_id::", "provider_id::", "hostname::",
 	"public_ip::", "private_ip::", "parent_id::", "server_role::", "server_service::", "server_is_enabled::", "server_token::", "location_name::", "upgrade::", "industry::", "email::",
 	"parent_instance_id::", "plan_name::", "package_link::", "build_id::", "is_migration::", "service_type::", "service_id::", "port::", "service_name::", "redirect_to_alias_id::", "redis_shard_id::",
-	"elastic_search_cluster_id::", "state::", "sync_option::", 'lb_records::', 'protected_cname::', "outbound_email::"
+	"elastic_search_cluster_id::", "state::", "sync_option::", 'lb_records::', 'protected_cname::', "outbound_email::", "s3_bucket::", "cdn_url::"
 ];
 
 
@@ -1611,7 +1621,9 @@ switch ($options["m"]) {
 											   isset($options['seat_cap']) ? $options['seat_cap'] : '',
 											   isset($options['customer_cap']) ? $options['customer_cap'] : '',
 											   isset($options['version']) ? $options['version'] : '',
-											   isset($options['country_code']) ? $options['country_code'] : '');
+											   isset($options['country_code']) ? $options['country_code'] : '',
+											   isset($options['cdn_url']) ? $options['cdn_url'] : '', '', '', '',
+											   isset($options['s3_bucket']) ? $options['s3_bucket'] : '');
 				} else {
 					die('Bhai mandatory values pass karni hi padegi..kar do fatafat.. => https://kayako.atlassian.net/wiki/display/OPS/Pods#Pods-Addanewpod');
 				}
