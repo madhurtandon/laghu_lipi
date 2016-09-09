@@ -129,8 +129,10 @@ do {
 
 				case 'c':
 					$is_migration = $Platform->GetInput('mark this as migration: TRUE or FALSE');
+					$outbound_email = $Platform->GetInput('mark outbound email: TRUE or FALSE');
+
 					$Platform->InstanceActions($instance_id, 'clone', ['app_domain'   => $Platform->GenerateRandomString(5), 'is_migration' => $is_migration,
-																	   'country_code' => 'US', 'outbound_email' => $outbound_email]);
+																	   'country_code' => 'US', 'outbound_email' => $outbound_email, 'type' => 'TRIAL']);
 					break;
 
 				case 'd':
@@ -173,7 +175,7 @@ do {
 					break;
 
 				case 'l':
-					$option          = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), DNS (Sync DNS entires)');
+					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), DNS (Sync DNS entires)');
 					$protected_cname = '';
 
 					if (strtolower($option) == 'dns') {
@@ -332,11 +334,11 @@ do {
 					}
 
 					if (isset($cname)) {
-						$Platform->InstanceAliasActions($instance_id, 'update', $alias_id, ['app_domain'  => 'new_alias' . strtolower($Platform->GenerateRandomString(4)), 'cname' => $cname,
+						$Platform->InstanceAliasActions($instance_id, 'update', $alias_id, ['app_domain'  => 'newalias' . strtolower($Platform->GenerateRandomString(4)), 'cname' => $cname,
 																							'certificate' => $certificate,
 																							'private_key' => $privateKey]);
 					} else {
-						$Platform->InstanceAliasActions($instance_id, 'update', $alias_id, ['app_domain' => 'new_alias' . strtolower($Platform->GenerateRandomString(4))]);
+						$Platform->InstanceAliasActions($instance_id, 'update', $alias_id, ['app_domain' => 'newalias' . strtolower($Platform->GenerateRandomString(4))]);
 					}
 
 					break;
@@ -723,8 +725,8 @@ do {
 					break;
 
 				case 'k':
-					$pod_id     = $Platform->GetInput('enter pod_id');
-					$option     = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), SEARCH (re-index Elastic Search), LB_RECORDS (Sync lb A record), PURGE_BUFFERS (Purge all buffered instances in this POD), SYNC_CLUSTER_CONF (Update server.json)');
+					$pod_id = $Platform->GetInput('enter pod_id');
+					$option = $Platform->GetInput('enter option to sync: ALL (Sync everything), CONFIG_VHOST (Sync only Novo configs and VHosts), DCS (Sync only DCS cron entires), SEARCH (re-index Elastic Search), LB_RECORDS (Sync lb A record), PURGE_BUFFERS (Purge all buffered instances in this POD), SYNC_CLUSTER_CONF (Update server.json)');
 					$lb_records = '';
 					if (strtolower($option) == 'lb_records' || strtolower($option) == 'all') {
 						$lb_records = $Platform->GetInput('enter lb\'s A records in single list JSON for example: ["127.0.0.1", "127.0.0.2"], if left blank then the A records will be synced with the entries present in database for this POD');

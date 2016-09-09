@@ -1633,7 +1633,10 @@ switch ($options["m"]) {
 			case "UpdatePod":
 				if (isset($options['pod_id']) && isset($options['enable_ondemand_routing']) && isset($options['enable_trial_routing'])) {
 					echo $Platform->PodActions("UpdatePod", $options['pod_id'], '', '', '', '',
-											   $options['enable_ondemand_routing'], $options['enable_trial_routing']);
+											   $options['enable_ondemand_routing'], $options['enable_trial_routing'], '', '', '', '',
+											   isset($options['cdn_url']) ? $options['cdn_url'] : '', '', '', '',
+											   isset($options['s3_bucket']) ? $options['s3_bucket'] : ''
+											   );
 				} else {
 					die('Bhai pod_id, enable_ondemand_routing & enable_trial_routing to daal do.. https://kayako.atlassian.net/wiki/display/OPS/Pods#Pods-Updateapod');
 				}
@@ -1929,3 +1932,4 @@ switch ($options["m"]) {
 		echo $Platform->getColoredString("Method does not exists..", 'red');
 		break;
 }
+
